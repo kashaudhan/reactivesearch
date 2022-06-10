@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, Modal, TouchableWithoutFeedback } from 'react-native';
+import { Platform, View, Modal, TouchableWithoutFeedback, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Input, Item, List, ListItem, Text, Button, Header, Left, Right, Icon } from 'native-base';
 
 import {
@@ -223,7 +223,7 @@ class DataSearch extends Component {
 			? this.props.dataField
 			: [this.props.dataField];
 
-		return getSuggestions({ fields, suggestions: results, currentValue: this.state.currentValue.toLowerCase() });
+		return getSuggestions(fields, results, this.state.currentValue.toLowerCase());
 	};
 
 	setValue = (value, isDefaultValue = false, props = this.props) => {
@@ -336,108 +336,121 @@ class DataSearch extends Component {
 			return (
 				<Modal
 					supportedOrientations={this.props.supportedOrientations || null}
-					transparent={false}
+					transparent={true}
 					visible={this.state.showModal}
 					onRequestClose={this.toggleModal}
 					{...getInnerKey(this.props.innerProps, 'modal')}
-				>
-					<Header {...getInnerKey(this.props.innerProps, 'header')}>
-						<Left style={getInnerKey(this.props.innerStyle, 'left')}>
-							<Button
-								transparent
-								onPress={this.toggleModal}
-								style={getInnerKey(this.props.innerStyle, 'button')}
-								{...getInnerKey(this.props.innerProps, 'button')}
-							>
-								<Icon
-									name="arrow-back"
-									style={{
-										...Platform.select({
-											android: {
-												color: '#fff',
-											},
-											ios: {
-												color: this.props.theming.primaryColor,
-											},
-										}),
-										...getInnerKey(this.props.innerStyle, 'icon'),
-									}}
-									{...getInnerKey(this.props.innerProps, 'icon')}
-								/>
-							</Button>
-						</Left>
-						{this.state.currentValue ? (
-							<Right style={getInnerKey(this.props.innerStyle, 'right')}>
-								<Button
-									style={{
-										paddingRight: 0,
-										...getInnerKey(this.props.innerStyle, 'button'),
-									}}
-									transparent
-									onPress={() => this.selectSuggestion('')}
-									{...getInnerKey(this.props.innerProps, 'button')}
-								>
-									<Text
-										style={{
-											...Platform.select({
-												android: {
-													color: '#fff',
-												},
-											}),
-										}}
-										{...getInnerKey(this.props.innerProps, 'text')}
-									>
-										Reset
-									</Text>
-								</Button>
-							</Right>
-						) : (
-							<Right style={getInnerKey(this.props.innerStyle, 'right')} />
-						)}
-					</Header>
-					<Item
-						regular
-						style={{ marginLeft: 10, margin: 10 }}
-						{...getInnerKey(this.props.innerProps, 'item')}
 					>
-						{this.props.showIcon && this.props.iconPosition === 'left' ? (
-							<Icon
-								name="search"
-								style={{
-									fontSize: 22,
-									top: 2,
-									...getInnerKey(this.props.innerStyle, 'icon'),
-								}}
-							/>
-						) : null}
-						<Input
+						<TouchableOpacity 
+							onPressOut={this.toggleModal}
+							activeOpacity={1}
 							style={{
-								color: this.props.theming.textColor,
-								...style,
-								...getInnerKey(this.props.innerStyle, 'input'),
+								flex: 1,
+								backgroundColor: "rgba(0,0,0,0.5)",
 							}}
-							returnKeyType="search"
-							onSubmitEditing={e => this.selectSuggestion(e.nativeEvent.text)}
-							placeholder={this.props.placeholder}
-							onChangeText={this.setValue}
-							value={this.state.currentValue}
-							onFocus={this.setSuggestions}
-							autoFocus
-							{...getInnerKey(this.props.innerProps, 'input')}
-						/>
-						{this.props.showIcon && this.props.iconPosition === 'right' ? (
-							<Icon
-								name="search"
-								style={{
-									fontSize: 22,
-									top: 2,
-									...getInnerKey(this.props.innerStyle, 'icon'),
-								}}
-								{...getInnerKey(this.props.innerProps, 'icon')}
-							/>
-						) : null}
-					</Item>
-					{this.renderSuggestions()}
+						>
+							<TouchableWithoutFeedback>
+								<View style={{ maxHeight: 400,backgroundColor:"rgba(0, 0, 0, 0.8)",}}>
+									{/* <Header {...getInnerKey(this.props.innerProps, 'header')}>
+										<Left style={getInnerKey(this.props.innerStyle, 'left')}>
+											<Button
+												transparent
+												onPress={this.toggleModal}
+												style={getInnerKey(this.props.innerStyle, 'button')}
+												{...getInnerKey(this.props.innerProps, 'button')}
+											>
+												<Icon
+													name="arrow-back"
+													style={{
+														...Platform.select({
+															android: {
+																color: '#fff',
+															},
+															ios: {
+																color: this.props.theming.primaryColor,
+															},
+														}),
+														...getInnerKey(this.props.innerStyle, 'icon'),
+													}}
+													{...getInnerKey(this.props.innerProps, 'icon')}
+												/>
+											</Button>
+										</Left>
+										{this.state.currentValue ? (
+											<Right style={getInnerKey(this.props.innerStyle, 'right')}>
+												<Button
+													style={{
+														paddingRight: 0,
+														...getInnerKey(this.props.innerStyle, 'button'),
+													}}
+													transparent
+													onPress={() => this.selectSuggestion('')}
+													{...getInnerKey(this.props.innerProps, 'button')}
+												>
+													<Text
+														style={{
+															...Platform.select({
+																android: {
+																	color: '#fff',
+																},
+															}),
+														}}
+														{...getInnerKey(this.props.innerProps, 'text')}
+													>
+														Reset
+													</Text>
+												</Button>
+											</Right>
+										) : (
+											<Right style={getInnerKey(this.props.innerStyle, 'right')} />
+										)}
+									</Header> */}
+									<Item
+										regular
+										style={{ marginLeft: 10, margin: 10, backgroundColor: "#FFF", }}
+										{...getInnerKey(this.props.innerProps, 'item')}
+									>
+										{this.props.showIcon && this.props.iconPosition === 'left' ? (
+											<Icon
+												name="search"
+												style={{
+													fontSize: 22,
+													top: 2,
+													...getInnerKey(this.props.innerStyle, 'icon'),
+												}}
+											/>
+										) : null}
+										<Input
+											style={{
+												color: this.props.theming.textColor,
+												...style,
+												...getInnerKey(this.props.innerStyle, 'input'),
+											}}
+											returnKeyType="search"
+											onSubmitEditing={e => this.selectSuggestion(e.nativeEvent.text)}
+											placeholder={this.props.placeholder}
+											onChangeText={this.setValue}
+											value={this.state.currentValue}
+											onFocus={this.setSuggestions}
+											autoFocus
+											{...getInnerKey(this.props.innerProps, 'input')}
+										/>
+										{this.props.showIcon && this.props.iconPosition === 'right' ? (
+											<Icon
+												name="search"
+												style={{
+													fontSize: 22,
+													top: 2,
+													...getInnerKey(this.props.innerStyle, 'icon'),
+												}}
+												{...getInnerKey(this.props.innerProps, 'icon')}
+											/>
+										) : null}
+									</Item>
+									{this.renderSuggestions()}
+								</View>
+							</TouchableWithoutFeedback>
+						</TouchableOpacity>
 				</Modal>
 			);
 		}
@@ -516,77 +529,80 @@ class DataSearch extends Component {
 		}
 
 		return (
-			<View style={this.props.style}>
-				{this.props.defaultSuggestions || this.props.autosuggest ? (
-					this.renderDataSearch(style)
-				) : (
-					<Item
-						regular
-						style={{ marginLeft: 0 }}
-						{...getInnerKey(this.props.innerProps, 'item')}
-					>
-						{this.props.showIcon && this.props.iconPosition === 'left' ? (
-							<Icon
-								name="search"
-								style={{
-									fontSize: 22,
-									top: 2,
-									...getInnerKey(this.props.innerStyle, 'icon'),
-								}}
-								{...getInnerKey(this.props.innerProps, 'icon')}
-							/>
-						) : null}
-						<Input
-							style={{
-								color: this.props.theming.textColor,
-								...style,
-								...getInnerKey(this.props.innerStyle, 'input'),
-							}}
-							placeholder={this.props.placeholder}
-							onChangeText={this.setValue}
-							value={this.state.currentValue}
-							autoFocus={this.props.autoFocus}
-							{...getInnerKey(this.props.innerProps, 'input')}
-						/>
-						{this.state.currentValue && this.props.showClear ? (
-							<Button
-								transparent
-								onPress={this.clearValue}
-								style={getInnerKey(this.props.innerStyle, 'button')}
-								{...getInnerKey(this.props.innerProps, 'button')}
-							>
+			<SafeAreaView forceInset={{ top: 'always' }}>
+				<View style={this.props.style}>
+					{this.props.defaultSuggestions || this.props.autosuggest ? (
+						this.renderDataSearch(style)
+					) : (
+						<Item
+							regular
+							style={{ marginLeft: 0 }}
+							{...getInnerKey(this.props.innerProps, 'item')}
+						>
+							{this.props.showIcon && this.props.iconPosition === 'left' ? (
 								<Icon
-									name="md-close"
+									name="search"
 									style={{
 										fontSize: 22,
-										top: 3,
-										color: '#666',
-										marginLeft: 10,
-										marginRight:
-											this.props.showIcon
-											&& this.props.iconPosition === 'right'
-												? 0
-												: 10,
+										top: 2,
 										...getInnerKey(this.props.innerStyle, 'icon'),
 									}}
 									{...getInnerKey(this.props.innerProps, 'icon')}
 								/>
-							</Button>
-						) : null}
-						{this.props.showIcon && this.props.iconPosition === 'right' ? (
-							<Icon
-								name="search"
+							) : null}
+							<Input
 								style={{
-									fontSize: 22,
-									top: 2,
-									...getInnerKey(this.props.innerStyle, 'icon'),
+									color: this.props.theming.textColor,
+									...style,
+									...getInnerKey(this.props.innerStyle, 'input'),
 								}}
-								{...getInnerKey(this.props.innerProps, 'icon')}
+								placeholder={this.props.placeholder}
+								onChangeText={this.setValue}
+								value={this.state.currentValue}
+								autoFocus={this.props.autoFocus}
+								{...getInnerKey(this.props.innerProps, 'input')}
 							/>
-						) : null}
-					</Item>
-				)}
-			</View>
+							{this.state.currentValue && this.props.showClear ? (
+								<Button
+									transparent
+									onPress={this.clearValue}
+									style={getInnerKey(this.props.innerStyle, 'button')}
+									{...getInnerKey(this.props.innerProps, 'button')}
+								>
+									<Icon
+										name="md-close"
+										style={{
+											fontSize: 22,
+											top: 3,
+											color: '#666',
+											marginLeft: 10,
+											marginRight:
+												this.props.showIcon
+												&& this.props.iconPosition === 'right'
+													? 0
+													: 10,
+											...getInnerKey(this.props.innerStyle, 'icon'),
+										}}
+										{...getInnerKey(this.props.innerProps, 'icon')}
+									/>
+								</Button>
+							) : null}
+							{this.props.showIcon && this.props.iconPosition === 'right' ? (
+								<Icon
+									name="search"
+									style={{
+										fontSize: 22,
+										top: 2,
+										...getInnerKey(this.props.innerStyle, 'icon'),
+									}}
+									{...getInnerKey(this.props.innerProps, 'icon')}
+								/>
+							) : null}
+						</Item>
+					)}
+				</View>
+
+			</SafeAreaView>
 		);
 	}
 }
